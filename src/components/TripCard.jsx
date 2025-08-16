@@ -1,9 +1,9 @@
 import { Card } from "antd";
+import { Link } from "react-router-dom";
 
 const TripCard = ({ trip, extra }) => {
   return (
     <Card title={trip.destination} extra={extra}>
-      <p> {trip.date}</p>
       <p>{trip.description}</p>
       {trip.image && (
         <img
@@ -12,6 +12,7 @@ const TripCard = ({ trip, extra }) => {
           style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
         />
       )}
+      <Link to={`/card/${trip.id}`}>See details</Link>
     </Card>
   );
 };

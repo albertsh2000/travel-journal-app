@@ -7,6 +7,7 @@ import MyJournal from "../pages/MyJournal";
 import AddTrip from "../pages/AddTrip";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { MENU_KEYS } from "../constants";
+import TripCardDetails from "../pages/TripCardDetails";
 
 const AppRoutes = () => (
   <Routes>
@@ -26,6 +27,14 @@ const AppRoutes = () => (
       element={
         <ProtectedRoute>
           <AddTrip />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path={MENU_KEYS.CARD_DETAILS}
+      element={
+        <ProtectedRoute>
+          <TripCardDetails />
         </ProtectedRoute>
       }
     />

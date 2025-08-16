@@ -8,12 +8,13 @@ const AddTrip = () => {
   const [form] = Form.useForm();
 
   const handleAdd = (values) => {
-    addTrip({
+    const tripData = {
       destination: values.destination,
-      date: values.date.format("YYYY-MM-DD"),
-      description: values.description,
-      image: values.image,
-    });
+      description: values.description || "",
+      image: values.image || "",
+    };
+
+    addTrip(tripData);
     message.success(TRIP_ADD_SUCCESS_MSG);
     form.resetFields();
   };
@@ -27,9 +28,6 @@ const AddTrip = () => {
           rules={[{ required: true }]}
         >
           <Input />
-        </Form.Item>
-        <Form.Item name="date" label="Date" rules={[{ required: true }]}>
-          <DatePicker style={{ width: "100%" }} />
         </Form.Item>
         <Form.Item name="description" label="Description">
           <Input.TextArea rows={3} style={{ resize: "none" }} />

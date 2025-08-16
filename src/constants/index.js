@@ -1,6 +1,8 @@
 export const LOCAL_STORAGE_USER_KEY = "user";
 
-export const LOCAL_STORAGE_TRIPS_KEY = "trips";
+export const COLLECTIONS = {
+  TRIPS: "trips",
+};
 
 export const LOGIN_SUCCESS_MSG = "Logged in successfully";
 export const LOGIN_ERROR_MSG = "Please enter valid credentials";
@@ -16,4 +18,5 @@ export const MENU_KEYS = {
   ADD_TRIP: "/add-trip",
   LOGIN: "/login",
   LOGOUT: "logout",
+  CARD_DETAILS: "/card/:id",
 };
