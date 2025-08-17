@@ -1,31 +1,39 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useCallback,
-} from "react";
-import { LOCAL_STORAGE_USER_KEY } from "../constants";
+import React, { createContext, useState, useContext, useCallback } from "react";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const storedUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_KEY));
-  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(storedUser));
-  const [user, setUser] = useState(storedUser);
+  const [isAuthenticated, setIsAuthenticated] = useState();
+  const [user, setUser] = useState();
 
-  const login = useCallback((username, password) => {
-    if (username && password) {
-      const userObj = { username };
+  const login = useCallback(async (email, password) => {
+    if (!email || !password) {
+      throw new Error("Email and password are required");
+    }
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const userObj = {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+      };
       setIsAuthenticated(true);
       setUser(userObj);
-      localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(userObj));
+      return userObj;
+    } catch (error) {
+      throw error;
     }
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await signOut(auth);
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
   }, []);
 
   const contextValue = React.useMemo(
@@ -39,9 +47,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

@@ -8,28 +8,38 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const onFinish = ({ username, password }) => {
-    if (username && password) {
-      login(username, password);
+  const onFinish = async ({ email, password }) => {
+    try {
+      await login(email, password);
       message.success(LOGIN_SUCCESS_MSG);
       navigate("/my-journal");
-    } else {
-      message.error(LOGIN_ERROR_MSG);
+    } catch (err) {
+      message.error(err.message || LOGIN_ERROR_MSG);
     }
   };
 
   return (
     <Card title="Login" style={{ maxWidth: 400, margin: "auto" }}>
       <Form onFinish={onFinish}>
-        <Form.Item name="username" rules={[{ required: true }]}>
-          <Input placeholder="Username" autoComplete="username" />
+        <Form.Item
+          name="email"
+          rules={[
+            { required: true, message: "Please input your email!" },
+            { type: "email", message: "Please enter a valid email!" },
+          ]}
+        >
+          <Input type="email" placeholder="Email" autoComplete="email" />
         </Form.Item>
-        <Form.Item name="password" rules={[{ required: true }]}>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: "Please input your password!" }]}
+        >
           <Input.Password
             placeholder="Password"
             autoComplete="current-password"
           />
         </Form.Item>
+
         <Button type="primary" htmlType="submit" block>
           Login
         </Button>

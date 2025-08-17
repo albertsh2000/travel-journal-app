@@ -1,5 +1,3 @@
-export const LOCAL_STORAGE_USER_KEY = "user";
-
 export const COLLECTIONS = {
   TRIPS: "trips",
 };
