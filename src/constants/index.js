@@ -2,10 +2,18 @@ export const COLLECTIONS = {
   TRIPS: "trips",
 };
 
-export const LOGIN_SUCCESS_MSG = "Logged in successfully";
-export const LOGIN_ERROR_MSG = "Please enter valid credentials";
+export const ERROR_MESSAGES = {
+  AUTH_REQUIRED_FIELDS: "Email and password are required",
+  AUTH_LOGIN_FAILED: "Login failed. Please check your credentials.",
+  FETCH_TRIPS: "Error fetching trips:",
+  ADD_TRIP: "Error adding trip:",
+  DELETE_TRIP: "Error deleting trip:",
+};
 
-export const TRIP_ADD_SUCCESS_MSG = "Trip added!";
+export const SUCCESS_MESSAGES = {
+  LOGIN_SUCCESS_MSG: "Logged in successfully",
+  TRIP_ADD_SUCCESS_MSG: "Trip added!",
+};
 
 export const DELETE_TRIP_CONFIRM_TITLE = "Delete this trip?";
 

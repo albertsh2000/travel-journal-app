@@ -1,10 +1,18 @@
+import React, { useEffect } from "react";
+import { List, Button, Modal } from "antd";
 import TripCard from "../components/TripCard";
 import { DELETE_TRIP_CONFIRM_TITLE } from "../constants";
-import { useTrips } from "../context/TripContext";
-import { List, Button, Card, Modal } from "antd";
+import useTripStore from "../stores/useTripStore"; 
 
 const MyJournal = () => {
-  const { trips, deleteTrip } = useTrips();
+  const trips = useTripStore((state) => state.trips);
+  const deleteTrip = useTripStore((state) => state.deleteTrip);
+  const fetchTrips = useTripStore((state) => state.fetchTrips);
+
+  useEffect(() => {
+    fetchTrips();
+  }, [fetchTrips]);
+
   const handleDelete = (id) => {
     Modal.confirm({
       title: DELETE_TRIP_CONFIRM_TITLE,

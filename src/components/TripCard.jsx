@@ -1,3 +1,4 @@
+import React from "react";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ const TripCard = ({ trip, extra }) => {
       {trip.image && (
         <img
           src={trip.image}
-          alt="Trip"
+          alt={`Photo of ${trip.destination}`}
           style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
         />
       )}
@@ -17,4 +18,4 @@ const TripCard = ({ trip, extra }) => {
   );
 };
 
-export default TripCard;
+export default React.memo(TripCard);

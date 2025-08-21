@@ -31,10 +31,12 @@ const router = createBrowserRouter([
       },
       {
         path: MENU_KEYS.MY_JOURNAL,
-        element: (
-          <ProtectedRoute>
-            {React.createElement(withSuspense(MyJournal))}
-          </ProtectedRoute>
+        element: React.createElement(
+          withSuspense(() => (
+            <ProtectedRoute>
+              <MyJournal />
+            </ProtectedRoute>
+          ))
         ),
       },
       {

@@ -1,20 +1,20 @@
 import React from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { LOGIN_ERROR_MSG, LOGIN_SUCCESS_MSG } from "../constants";
+import useAuthStore from "../stores/useAuthStore";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../constants";
 
 const Login = () => {
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
   const onFinish = async ({ email, password }) => {
     try {
       await login(email, password);
-      message.success(LOGIN_SUCCESS_MSG);
+      message.success(SUCCESS_MESSAGES.LOGIN_SUCCESS_MSG);
       navigate("/my-journal");
     } catch (err) {
-      message.error(err.message || LOGIN_ERROR_MSG);
+      message.error(err.message || ERROR_MESSAGES.AUTH_LOGIN_FAILED);
     }
   };
 

@@ -1,22 +1,26 @@
 import React from "react";
-import { Form, Input, Button, Card, DatePicker, message } from "antd";
-import { useTrips } from "../context/TripContext";
-import { TRIP_ADD_SUCCESS_MSG } from "../constants";
+import { Form, Input, Button, Card, message } from "antd";
+import useTripStore from "../stores/useTripStore";
+import { SUCCESS_MESSAGES } from "../constants";
 
 const AddTrip = () => {
-  const { addTrip } = useTrips();
+  const addTrip = useTripStore((state) => state.addTrip);
   const [form] = Form.useForm();
 
-  const handleAdd = (values) => {
+  const handleAdd = async (values) => {
     const tripData = {
       destination: values.destination,
       description: values.description || "",
       image: values.image || "",
     };
 
-    addTrip(tripData);
-    message.success(TRIP_ADD_SUCCESS_MSG);
-    form.resetFields();
+    try {
+      await addTrip(tripData);
+      message.success(SUCCESS_MESSAGES.TRIP_ADD_SUCCESS_MSG);
+      form.resetFields();
+    } catch (error) {
+      message.error("Failed to add trip.");
+    }
   };
 
   return (
@@ -25,7 +29,7 @@ const AddTrip = () => {
         <Form.Item
           name="destination"
           label="Destination"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: "Please enter a destination." }]}
         >
           <Input />
         </Form.Item>

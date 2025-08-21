@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu } from "antd";
-import { useAuth } from "../context/AuthContext";
+import useAuthStore from "../stores/useAuthStore";
 import { MENU_KEYS } from "../constants";
 
 const NavigationMenu = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
   const location = useLocation();
 

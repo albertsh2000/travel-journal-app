@@ -1,10 +1,18 @@
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useTrips } from "../context/TripContext";
+import useTripStore from "../stores/useTripStore"; 
 
 const TripCardDetails = () => {
   const { id } = useParams();
-  const { combinedTrips } = useTrips();
 
+  const fetchTrips = useTripStore((state) => state.fetchTrips);
+  const getCombinedTrips = useTripStore((state) => state.getCombinedTrips);
+
+  useEffect(() => {
+    fetchTrips();
+  }, [fetchTrips]);
+
+  const combinedTrips = getCombinedTrips();
   const selectedCard = combinedTrips.find((el) => el.id === id);
 
   if (!selectedCard) {
