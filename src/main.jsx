@@ -3,14 +3,11 @@ import "@ant-design/v5-patch-for-react-19";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { TripProvider } from "./context/TripContext";
-import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <TripProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </TripProvider>
   </AuthProvider>
 );

@@ -5,7 +5,6 @@ import { List, Button, Card, Modal } from "antd";
 
 const MyJournal = () => {
   const { trips, deleteTrip } = useTrips();
-
   const handleDelete = (id) => {
     Modal.confirm({
       title: DELETE_TRIP_CONFIRM_TITLE,

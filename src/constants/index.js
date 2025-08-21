@@ -15,6 +15,6 @@ export const MENU_KEYS = {
   MY_JOURNAL: "/my-journal",
   ADD_TRIP: "/add-trip",
   LOGIN: "/login",
-  LOGOUT: "logout",
+  LOGOUT: "/logout",
   CARD_DETAILS: "/card/:id",
 };

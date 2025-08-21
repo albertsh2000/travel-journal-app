@@ -1,11 +1,7 @@
 import React from "react";
-import MainLayout from "./components/MainLayout";
-import AppRoutes from "./components/AppRoutes";
 
-const App = () => (
-  <MainLayout>
-    <AppRoutes />
-  </MainLayout>
-);
+import router from "./routes/appRoutes";
+import { RouterProvider } from "react-router-dom";
+const App = () => <RouterProvider router={router} />;
 
 export default App;
