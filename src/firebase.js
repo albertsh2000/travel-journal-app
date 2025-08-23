@@ -18,3 +18,5 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 export { db, auth };
+
+// firebase app id hosting    traveljournalapp-c3a03-5d8ca.
