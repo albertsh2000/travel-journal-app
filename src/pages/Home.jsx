@@ -7,8 +7,7 @@ const Home = () => (
   <div style={{ padding: 24 }}>
     <Title>Welcome to the Travel Journal</Title>
     <Paragraph>
-      Discover amazing places others have been to, and share your own
-      journeys...
+      Discover amazing places others have been to, and share your own journeys
     </Paragraph>
   </div>
 );

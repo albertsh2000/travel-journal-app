@@ -5,3 +5,5 @@ import { RouterProvider } from "react-router-dom";
 const App = () => <RouterProvider router={router} />;
 
 export default App;
+
+console.log("auto deploy");
