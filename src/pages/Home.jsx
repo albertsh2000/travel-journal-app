@@ -8,7 +8,7 @@ const Home = () => (
     <Title>Welcome to the Travel Journal</Title>
     <Paragraph>
       Discover amazing places others have been to, and share your own journeys
-      test
+      test 1
     </Paragraph>
   </div>
 );
