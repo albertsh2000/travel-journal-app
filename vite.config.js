@@ -5,4 +5,18 @@ import { visualizer } from "rollup-plugin-visualizer";
 export default defineConfig({
   base: "/",
   plugins: [react(), visualizer()],
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          antd: ["antd", "@ant-design/v5-patch-for-react-19"],
+          firebase: ["firebase"],
+          router: ["react-router-dom"],
+          utilities: ["zustand", "nanoid"],
+        },
+      },
+    },
+  },
 });
