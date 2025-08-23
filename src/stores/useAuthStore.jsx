@@ -1,44 +1,70 @@
 import { create } from "zustand";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { ERROR_MESSAGES } from "../constants";
 
-const useAuthStore = create((set) => ({
-  isAuthenticated: false,
-  user: null,
-
-  login: async (email, password) => {
-    if (!email || !password) {
-      throw new Error(ERROR_MESSAGES.AUTH_REQUIRED_FIELDS);
-    }
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const userObj = {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email,
-      };
+const useAuthStore = create((set) => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
       set({
         isAuthenticated: true,
-        user: userObj,
+        user: {
+          uid: user.uid,
+          email: user.email,
+        },
+        isAuthReady: true,
       });
-      return userObj;
-    } catch (error) {
-      throw error;
+    } else {
+      set({
+        isAuthenticated: false,
+        user: null,
+        isAuthReady: true,
+      });
     }
-  },
+  });
 
-  logout: async () => {
-    await signOut(auth);
-    set({
-      isAuthenticated: false,
-      user: null,
-    });
-  },
-}));
+  return {
+    isAuthenticated: false,
+    isAuthReady: false,
+    user: null,
+
+    login: async (email, password) => {
+      if (!email || !password) {
+        throw new Error(ERROR_MESSAGES.AUTH_REQUIRED_FIELDS);
+      }
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        set({
+          isAuthenticated: true,
+          user: {
+            uid: user.uid,
+            email: user.email,
+          },
+        });
+        return user;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    logout: async () => {
+      await signOut(auth);
+      set({
+        isAuthenticated: false,
+        user: null,
+      });
+    },
+  };
+});
 
 export default useAuthStore;
