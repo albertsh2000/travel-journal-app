@@ -8,6 +8,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (!id) return;
+
           if (id.includes("node_modules")) {
             if (id.includes("react-dom") || id.includes("react")) {
               return "react-vendor";
