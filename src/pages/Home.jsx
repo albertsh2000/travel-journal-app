@@ -16,7 +16,7 @@ const Home = () => (
     <Title>Welcome to the Travel Journal</Title>
     <Paragraph>
       Discover amazing places others have been to, and share your own journeys
-      test 5
+      test 7
     </Paragraph>
     <div style={{ borderRadius: "16px", overflow: "hidden" }}>
       <Carousel autoplay arrows>
