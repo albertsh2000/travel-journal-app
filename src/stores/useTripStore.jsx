@@ -1,14 +1,7 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { nanoid } from "nanoid";
-import { db } from "../firebase";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
-import { COLLECTIONS, ERROR_MESSAGES } from "../constants";
+import { ERROR_MESSAGES, MOCK_API_TRIPS_URL } from "../constants";
 
 const dummyTrips = [
   {
@@ -23,47 +16,67 @@ const dummyTrips = [
   },
 ];
 
-const useTripStore = create((set, get) => ({
-  trips: [],
-  dummyTrips,
-  hasFetched: false,
+const useTripStore = create(
+  persist(
+    (set, get) => ({
+      trips: [],
+      dummyTrips,
+      hasFetched: false,
 
-  fetchTrips: async () => {
-    try {
-      const snapshot = await getDocs(collection(db, COLLECTIONS.TRIPS));
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      set({ trips: data, hasFetched: true });
-    } catch (error) {
-      console.error(ERROR_MESSAGES.FETCH_TRIPS, error);
+      fetchTrips: async () => {
+        try {
+          const res = await fetch(MOCK_API_TRIPS_URL);
+          const data = await res.json();
+          set({ trips: data, hasFetched: true });
+        } catch (error) {
+          console.error(ERROR_MESSAGES.FETCH_TRIPS, error);
+        }
+      },
+
+      addTrip: async (trip) => {
+        try {
+          const res = await fetch(MOCK_API_TRIPS_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(trip),
+          });
+          const newTrip = await res.json();
+
+          set((state) => ({
+            trips: [newTrip, ...state.trips],
+          }));
+        } catch (error) {
+          console.error(ERROR_MESSAGES.ADD_TRIP, error);
+        }
+      },
+
+      deleteTrip: async (id) => {
+        try {
+          await fetch(`${MOCK_API_TRIPS_URL}/${id}`, {
+            method: "DELETE",
+          });
+          set((state) => ({
+            trips: state.trips.filter((trip) => trip.id !== id),
+          }));
+        } catch (error) {
+          console.error(ERROR_MESSAGES.DELETE_TRIP, error);
+        }
+      },
+
+      getCombinedTrips: () => {
+        const { trips } = get();
+        return [...trips];
+      },
+    }),
+    {
+      name: "trip-storage",
+      partialize: (state) => ({
+        trips: state.trips,
+      }),
     }
-  },
-
-  addTrip: async (trip) => {
-    try {
-      const docRef = await addDoc(collection(db, COLLECTIONS.TRIPS), trip);
-      set((state) => ({
-        trips: [{ id: docRef.id, ...trip }, ...state.trips],
-      }));
-    } catch (error) {
-      console.error(ERROR_MESSAGES.ADD_TRIP, error);
-    }
-  },
-
-  deleteTrip: async (id) => {
-    try {
-      await deleteDoc(doc(db, COLLECTIONS.TRIPS, id));
-      set((state) => ({
-        trips: state.trips.filter((trip) => trip.id !== id),
-      }));
-    } catch (error) {
-      console.error(ERROR_MESSAGES.DELETE_TRIP, error);
-    }
-  },
-
-  getCombinedTrips: () => {
-    const { trips, dummyTrips } = get();
-    return [...trips, ...dummyTrips];
-  },
-}));
+  )
+);
 
 export default useTripStore;

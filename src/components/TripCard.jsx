@@ -9,7 +9,7 @@ const TripCard = ({ trip, extra }) => {
       {trip.image && (
         <img
           src={trip.image}
-          alt={`Photo of ${trip.destination}`}
+          {...(trip.destination ? { alt: `Photo of ${trip.destination}` } : {})}
           style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
         />
       )}

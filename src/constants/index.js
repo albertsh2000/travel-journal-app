@@ -26,3 +26,8 @@ export const MENU_KEYS = {
   LOGOUT: "/logout",
   CARD_DETAILS: "/card/:id",
 };
+
+export const MOCK_API_USERS_URL =
+  "https://68b16988a860fe41fd5e4e29.mockapi.io/users";
+export const MOCK_API_TRIPS_URL =
+  "https://68b16988a860fe41fd5e4e29.mockapi.io/trips";

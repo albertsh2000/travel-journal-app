@@ -6,11 +6,11 @@ import NavigationMenu from "./NavigationMenu";
 const { Header, Content } = Layout;
 
 const MainLayout = () => (
-  <Layout>
+  <Layout style={{ minHeight: "100vh", overflowX: "hidden" }}>
     <Header>
       <NavigationMenu />
     </Header>
-    <Content style={{ padding: "24px" }}>
+    <Content style={{ padding: "24px", background: "#abb6bc" }}>
       <Outlet />
     </Content>
   </Layout>
