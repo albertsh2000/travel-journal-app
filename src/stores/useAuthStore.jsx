@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import apiService from "../apiService";
 import { ERROR_MESSAGES, MOCK_API_USERS_URL } from "../constants";
 
 const useAuthStore = create(
@@ -14,30 +15,25 @@ const useAuthStore = create(
           throw new Error(ERROR_MESSAGES.AUTH_REQUIRED_FIELDS);
         }
 
-        try {
-          const res = await fetch(MOCK_API_USERS_URL);
-          const users = await res.json();
+        const users = await apiService.get(MOCK_API_USERS_URL);
 
-          const matchedUser = users.find(
-            (user) => user.email === email && user.password === password
-          );
+        const matchedUser = users.find(
+          (user) => user.email === email && user.password === password
+        );
 
-          if (!matchedUser) {
-            throw new Error("Invalid email or password");
-          }
-
-          set({
-            isAuthenticated: true,
-            user: {
-              id: matchedUser.id,
-              email: matchedUser.email,
-            },
-          });
-
-          return matchedUser;
-        } catch (error) {
-          throw error;
+        if (!matchedUser) {
+          throw new Error("Invalid email or password");
         }
+
+        set({
+          isAuthenticated: true,
+          user: {
+            id: matchedUser.id,
+            email: matchedUser.email,
+          },
+        });
+
+        return matchedUser;
       },
 
       logout: async () => {

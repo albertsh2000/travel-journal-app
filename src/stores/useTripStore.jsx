@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { nanoid } from "nanoid";
-import { ERROR_MESSAGES, MOCK_API_TRIPS_URL } from "../constants";
+import apiService from "../apiService";
+import { MOCK_API_TRIPS_URL } from "../constants";
 
 const dummyTrips = [
   {
@@ -24,45 +25,22 @@ const useTripStore = create(
       hasFetched: false,
 
       fetchTrips: async () => {
-        try {
-          const res = await fetch(MOCK_API_TRIPS_URL);
-          const data = await res.json();
-          set({ trips: data, hasFetched: true });
-        } catch (error) {
-          console.error(ERROR_MESSAGES.FETCH_TRIPS, error);
-        }
+        const data = await apiService.get(MOCK_API_TRIPS_URL);
+        set({ trips: data, hasFetched: true });
       },
 
       addTrip: async (trip) => {
-        try {
-          const res = await fetch(MOCK_API_TRIPS_URL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(trip),
-          });
-          const newTrip = await res.json();
-
-          set((state) => ({
-            trips: [newTrip, ...state.trips],
-          }));
-        } catch (error) {
-          console.error(ERROR_MESSAGES.ADD_TRIP, error);
-        }
+        const newTrip = await apiService.post(MOCK_API_TRIPS_URL, trip);
+        set((state) => ({
+          trips: [newTrip, ...state.trips],
+        }));
       },
 
       deleteTrip: async (id) => {
-        try {
-          await fetch(`${MOCK_API_TRIPS_URL}/${id}`, {
-            method: "DELETE",
-          });
-          set((state) => ({
-            trips: state.trips.filter((trip) => trip.id !== id),
-          }));
-        } catch (error) {
-          console.error(ERROR_MESSAGES.DELETE_TRIP, error);
-        }
+        await apiService.delete(`${MOCK_API_TRIPS_URL}/${id}`);
+        set((state) => ({
+          trips: state.trips.filter((trip) => trip.id !== id),
+        }));
       },
 
       getCombinedTrips: () => {
