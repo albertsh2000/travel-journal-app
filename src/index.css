@@ -39,3 +39,8 @@ body {
   inset-inline-start: -10px !important;
 
 }
+
+:where(.css-1vjf2v5).ant-layout-footer {
+  background-color: #263449 !important;
+  color: #fff;
+}
