@@ -19,32 +19,34 @@ const Login = () => {
   };
 
   return (
-    <Card title="Login" style={{ maxWidth: 400, margin: "auto" }}>
-      <Form onFinish={onFinish}>
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: "Please input your email!" },
-            { type: "email", message: "Please enter a valid email!" },
-          ]}
-        >
-          <Input type="email" placeholder="Email" autoComplete="email" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.Password
-            placeholder="Password"
-            autoComplete="current-password"
-          />
-        </Form.Item>
+    <div style={{ marginTop: "24px" }}>
+      <Card title="Login" style={{ maxWidth: 400, margin: "auto" }}>
+        <Form onFinish={onFinish}>
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Please enter a valid email!" },
+            ]}
+          >
+            <Input type="email" placeholder="Email" autoComplete="email" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your password!" }]}
+          >
+            <Input.Password
+              placeholder="Password"
+              autoComplete="current-password"
+            />
+          </Form.Item>
 
-        <Button type="primary" htmlType="submit" block>
-          Login
-        </Button>
-      </Form>
-    </Card>
+          <Button type="primary" htmlType="submit" block>
+            Login
+          </Button>
+        </Form>
+      </Card>
+    </div>
   );
 };
 

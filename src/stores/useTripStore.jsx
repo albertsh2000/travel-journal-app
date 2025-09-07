@@ -1,27 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { nanoid } from "nanoid";
 import apiService from "../apiService";
 import { MOCK_API_TRIPS_URL } from "../constants";
-
-const dummyTrips = [
-  {
-    id: nanoid(),
-    destination: "Tokyo",
-    description: "The bustling capital of Japan.",
-  },
-  {
-    id: nanoid(),
-    destination: "New York",
-    description: "The city that never sleeps.",
-  },
-];
 
 const useTripStore = create(
   persist(
     (set, get) => ({
       trips: [],
-      dummyTrips,
       hasFetched: false,
 
       fetchTrips: async () => {
@@ -41,6 +26,11 @@ const useTripStore = create(
         set((state) => ({
           trips: state.trips.filter((trip) => trip.id !== id),
         }));
+      },
+
+      getTripById: async (id) => {
+        const data = await apiService.get(`${MOCK_API_TRIPS_URL}/${id}`);
+        return data;
       },
 
       getCombinedTrips: () => {

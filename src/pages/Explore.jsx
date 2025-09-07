@@ -20,6 +20,7 @@ const Explore = () => {
 
   return (
     <List
+      style={{ padding: "24px" }}
       grid={{ gutter: 16, column: 2 }}
       dataSource={combinedTrips}
       renderItem={(item) => (

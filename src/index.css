@@ -10,3 +10,32 @@ body {
   background-color: #263449 !important;
 
 }
+
+:where(.css-dev-only-do-not-override-1vjf2v5).ant-layout-footer {
+  background-color: #263449 !important;
+  color: #fff;
+
+}
+
+.slick-prev,
+.slick-next {
+  z-index: 10 !important;
+
+}
+
+:where(.css-dev-only-do-not-override-1vjf2v5).ant-carousel .slick-prev::after,
+:where(.css-dev-only-do-not-override-1vjf2v5).ant-carousel .slick-next::after {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+:where(.css-dev-only-do-not-override-1vjf2v5).ant-carousel .slick-prev::after {
+  inset-inline-end: 10px;
+
+}
+
+:where(.css-dev-only-do-not-override-1vjf2v5).ant-carousel .slick-next::after {
+  inset-inline-start: -10px;
+
+}

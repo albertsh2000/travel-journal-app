@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { List, Button, Modal } from "antd";
 import TripCard from "../components/TripCard";
 import { DELETE_TRIP_CONFIRM_TITLE } from "../constants";
-import useTripStore from "../stores/useTripStore"; 
+import useTripStore from "../stores/useTripStore";
 
 const MyJournal = () => {
   const trips = useTripStore((state) => state.trips);
@@ -22,6 +22,7 @@ const MyJournal = () => {
 
   return (
     <List
+      style={{ padding: "24px" }}
       grid={{ gutter: 16, column: 2 }}
       dataSource={trips}
       renderItem={(trip) => (

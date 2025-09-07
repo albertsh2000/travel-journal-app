@@ -1,28 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useTripStore from "../stores/useTripStore"; 
+import useTripStore from "../stores/useTripStore";
+import Loader from "../components/Loader";
+import { ERROR_MESSAGES } from "../constants";
 
 const TripCardDetails = () => {
   const { id } = useParams();
+  const getTripById = useTripStore((state) => state.getTripById);
 
-  const fetchTrips = useTripStore((state) => state.fetchTrips);
-  const getCombinedTrips = useTripStore((state) => state.getCombinedTrips);
+  const [trip, setTrip] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchTrips();
-  }, [fetchTrips]);
+    const getTrip = async () => {
+      try {
+        const data = await getTripById(id);
+        setTrip(data);
+      } catch (err) {
+        setError(ERROR_MESSAGES.FETCH_TRIPS);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const combinedTrips = getCombinedTrips();
-  const selectedCard = combinedTrips.find((el) => el.id === id);
+    getTrip();
+  }, [getTripById, id]);
 
-  if (!selectedCard) {
-    return <p>Trip not found</p>;
-  }
+  if (loading) return <Loader />;
+  if (error) return <p>{error}</p>;
 
-  const { destination, description, image } = selectedCard;
+  const { destination, description, image } = trip;
 
   return (
-    <div>
+    <div style={{ padding: "24px" }}>
       <h1>{destination}</h1>
       <p>
         <strong>Description:</strong> {description}
