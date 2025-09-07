@@ -30,6 +30,14 @@ body {
   color: #fff;
 }
 
+:where(.css-1vjf2v5).ant-carousel .slick-prev::after,
+:where(.css-1vjf2v5).ant-carousel .slick-next::after {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+
+
 :where(.css-dev-only-do-not-override-1vjf2v5).ant-carousel .slick-prev::after {
   inset-inline-end: 10px !important;
 
