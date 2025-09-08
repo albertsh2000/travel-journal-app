@@ -1,9 +1,10 @@
 import React from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import useTripStore from "../stores/useTripStore";
-import { SUCCESS_MESSAGES } from "../constants";
+import { useTranslation } from "react-i18next";
 
 const AddTrip = () => {
+  const { t } = useTranslation();
   const addTrip = useTripStore((state) => state.addTrip);
   const [form] = Form.useForm();
 
@@ -16,16 +17,19 @@ const AddTrip = () => {
 
     try {
       await addTrip(tripData);
-      message.success(SUCCESS_MESSAGES.TRIP_ADD_SUCCESS_MSG);
+      message.success(t("addTripForm.success"));
       form.resetFields();
     } catch (error) {
-      message.error("Failed to add trip.");
+      message.error(t("addTripForm.error"));
     }
   };
 
   return (
     <div style={{ marginTop: "24px" }}>
-      <Card title="Add a New Trip" style={{ maxWidth: 500, margin: "auto" }}>
+      <Card
+        title={t("addTripForm.title")}
+        style={{ maxWidth: 500, margin: "auto" }}
+      >
         <Form
           layout="vertical"
           form={form}
@@ -34,19 +38,21 @@ const AddTrip = () => {
         >
           <Form.Item
             name="destination"
-            label="Destination"
-            rules={[{ required: true, message: "Please enter a destination." }]}
+            label={t("addTripForm.destination")}
+            rules={[
+              { required: true, message: t("addTripForm.destinationRequired") },
+            ]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="description" label="Description">
+          <Form.Item name="description" label={t("addTripForm.description")}>
             <Input.TextArea rows={3} style={{ resize: "none" }} />
           </Form.Item>
-          <Form.Item name="image" label="Image URL">
+          <Form.Item name="image" label={t("addTripForm.imageUrl")}>
             <Input />
           </Form.Item>
           <Button type="primary" htmlType="submit" block>
-            Add Trip
+            {t("addTripForm.button")}
           </Button>
         </Form>
       </Card>

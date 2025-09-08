@@ -1,8 +1,11 @@
 import React from "react";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const TripCard = ({ trip, extra }) => {
+  const { t } = useTranslation();
+
   return (
     <Card title={trip.destination} extra={extra}>
       <p>{trip.description}</p>
@@ -13,7 +16,7 @@ const TripCard = ({ trip, extra }) => {
           style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
         />
       )}
-      <Link to={`/card/${trip.id}`}>See details</Link>
+      <Link to={`/card/${trip.id}`}>{t("seeDetails")}</Link>
     </Card>
   );
 };

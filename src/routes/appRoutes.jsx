@@ -11,6 +11,7 @@ const Login = lazy(() => import("../pages/Login"));
 const MyJournal = lazy(() => import("../pages/MyJournal"));
 const AddTrip = lazy(() => import("../pages/AddTrip"));
 const TripCardDetails = lazy(() => import("../pages/TripCardDetails"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
             </ProtectedRoute>
           ))
         ),
+      },
+      {
+        path: "*",
+        element: React.createElement(withSuspense(NotFound)),
       },
     ],
   },

@@ -1,0 +1,71 @@
+{
+  "home": "Home",
+  "explore": "Explore",
+  "myJournal": "My Journal",
+  "addTrip": "Add Trip",
+  "login": "Login",
+  "logout": "Logout",
+  "menu": "Menu",
+  "hero": {
+    "title": "Explore the World with Travel Journal",
+    "subtitle": "Discover amazing places, share your travel stories, and connect with adventurers worldwide."
+  },
+  "homePage": {
+    "whyTravelWithUs": "Why Travel with Us?"
+  },
+  "carousel": {
+    "alt": "Slide {{index}}"
+  },
+  "features": {
+    "exploreTitle": "Explore New Destinations",
+    "exploreDescription": "Find hidden gems and travel stories from explorers around the world.",
+    "shareTitle": "Share Your Journey",
+    "shareDescription": "Document your adventures and inspire others with your unique travel experiences.",
+    "planTitle": "Plan Your Trips",
+    "planDescription": "Use our tools to organize and plan your next exciting travel.",
+    "connectTitle": "Connect with Fellow Travelers",
+    "connectDescription": "Join a community of like-minded explorers and share tips, stories, and advice.",
+    "accessTitle": "Access Expert Travel Guides",
+    "accessDescription": "Get insider information from travel experts to make your journey smooth and memorable.",
+    "travelSmartTitle": "Travel Smart with Tools",
+    "travelSmartDescription": "Use smart tools like budget planners, itinerary builders, and packing checklists."
+  },
+  "footer": {
+    "aboutTitle": "About Travel Journal:",
+    "aboutText": "Your go-to platform for sharing and discovering travel stories, tips, and guides from around the world.",
+    "contactUs": "Contact us:",
+    "email": "support@traveljournal.com",
+    "copyright": "© 2025 Travel Journal. All rights reserved."
+  },
+  "seeDetails": "See details",
+  "loginTitle": "Login",
+  "loginForm": {
+    "emailRequired": "Please input your email!",
+    "emailInvalid": "Please enter a valid email!",
+    "passwordRequired": "Please input your password!",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password"
+  },
+  "addTripForm": {
+    "title": "Add a New Trip",
+    "destination": "Destination",
+    "destinationRequired": "Please enter a destination.",
+    "description": "Description",
+    "imageUrl": "Image URL",
+    "button": "Add Trip",
+    "success": "Trip added successfully!",
+    "error": "Failed to add trip."
+  },
+  "myJournalComponent": {
+    "delete": "Delete",
+    "confirmDeleteTitle": "Are you sure you want to delete this trip?"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
+  "notFound": {
+    "backHome": "Back Home",
+    "subTitle": "Sorry, the page you visited does not exist."
+  }
+}

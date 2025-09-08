@@ -3,8 +3,10 @@ import { Form, Input, Button, Card, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../constants";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation();
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
@@ -20,29 +22,35 @@ const Login = () => {
 
   return (
     <div style={{ marginTop: "24px" }}>
-      <Card title="Login" style={{ maxWidth: 400, margin: "auto" }}>
+      <Card title={t("loginTitle")} style={{ maxWidth: 400, margin: "auto" }}>
         <Form onFinish={onFinish}>
           <Form.Item
             name="email"
             rules={[
-              { required: true, message: "Please input your email!" },
-              { type: "email", message: "Please enter a valid email!" },
+              { required: true, message: t("loginForm.emailRequired") },
+              { type: "email", message: t("loginForm.emailInvalid") },
             ]}
           >
-            <Input type="email" placeholder="Email" autoComplete="email" />
+            <Input
+              type="email"
+              placeholder={t("loginForm.emailPlaceholder")}
+              autoComplete="email"
+            />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: t("loginForm.passwordRequired") },
+            ]}
           >
             <Input.Password
-              placeholder="Password"
+              placeholder={t("loginForm.passwordPlaceholder")}
               autoComplete="current-password"
             />
           </Form.Item>
 
           <Button type="primary" htmlType="submit" block>
-            Login
+            {t("login")}
           </Button>
         </Form>
       </Card>

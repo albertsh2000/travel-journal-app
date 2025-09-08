@@ -1,7 +1,10 @@
 import React from "react";
 import { DownOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 const HeroBanner = () => {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -39,11 +42,10 @@ const HeroBanner = () => {
         }}
       >
         <h1 style={{ fontSize: "50px", marginBottom: 16, fontWeight: "bold" }}>
-          Explore the World with Travel Journal
+          {t("hero.title")}
         </h1>
         <p style={{ fontSize: "25px", maxWidth: 600, marginBottom: 40 }}>
-          Discover amazing places, share your travel stories, and connect with
-          adventurers worldwide.
+          {t("hero.subtitle")}
         </p>
 
         <button

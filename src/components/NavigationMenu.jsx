@@ -4,10 +4,14 @@ import { MenuOutlined } from "@ant-design/icons";
 import useAuthStore from "../stores/useAuthStore";
 import { MENU_KEYS } from "../constants";
 import { useState, useEffect } from "react";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const { useBreakpoint } = Grid;
 
 const NavigationMenu = () => {
+  const { t } = useTranslation();
+
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
@@ -27,31 +31,34 @@ const NavigationMenu = () => {
   }, [location.pathname]);
 
   const leftMenuItems = [
-    { key: MENU_KEYS.HOME, label: <Link to={MENU_KEYS.HOME}>Home</Link> },
+    {
+      key: MENU_KEYS.HOME,
+      label: <Link to={MENU_KEYS.HOME}>{t("home")}</Link>,
+    },
     {
       key: MENU_KEYS.EXPLORE,
-      label: <Link to={MENU_KEYS.EXPLORE}>Explore</Link>,
+      label: <Link to={MENU_KEYS.EXPLORE}>{t("explore")}</Link>,
     },
     ...(isAuthenticated
       ? [
           {
             key: MENU_KEYS.MY_JOURNAL,
-            label: <Link to={MENU_KEYS.MY_JOURNAL}>My Journal</Link>,
+            label: <Link to={MENU_KEYS.MY_JOURNAL}>{t("myJournal")}</Link>,
           },
           {
             key: MENU_KEYS.ADD_TRIP,
-            label: <Link to={MENU_KEYS.ADD_TRIP}>Add Trip</Link>,
+            label: <Link to={MENU_KEYS.ADD_TRIP}>{t("addTrip")}</Link>,
           },
         ]
       : []),
   ];
 
   const rightMenuItems = isAuthenticated
-    ? [{ key: MENU_KEYS.LOGOUT, label: <span>Logout</span> }]
+    ? [{ key: MENU_KEYS.LOGOUT, label: <span>{t("logout")}</span> }]
     : [
         {
           key: MENU_KEYS.LOGIN,
-          label: <Link to={MENU_KEYS.LOGIN}>Login</Link>,
+          label: <Link to={MENU_KEYS.LOGIN}>{t("login")}</Link>,
         },
       ];
 
@@ -79,7 +86,7 @@ const NavigationMenu = () => {
             onClick={() => setDrawerVisible(true)}
           />
           <Drawer
-            title="Menu"
+            title={t("menu")}
             placement="left"
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
@@ -91,12 +98,21 @@ const NavigationMenu = () => {
               items={combinedMenuItems}
               onClick={handleMenuClick}
             />
+            <div style={{ padding: 16 }}>
+              <LanguageSwitcher />
+            </div>
           </Drawer>
         </>
       )}
 
       {screens.md && (
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Menu
             mode="horizontal"
             theme="dark"
@@ -106,14 +122,18 @@ const NavigationMenu = () => {
             style={{ flex: 1 }}
           />
 
-          <Menu
-            mode="horizontal"
-            theme="dark"
-            items={rightMenuItems}
-            selectedKeys={[rightSelectedKey]}
-            onClick={handleMenuClick}
-            style={{ minWidth: 80, justifyContent: "flex-end" }}
-          />
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <LanguageSwitcher />
+
+            <Menu
+              mode="horizontal"
+              theme="dark"
+              items={rightMenuItems}
+              selectedKeys={[rightSelectedKey]}
+              onClick={handleMenuClick}
+              style={{ minWidth: 80 }}
+            />
+          </div>
         </div>
       )}
     </nav>

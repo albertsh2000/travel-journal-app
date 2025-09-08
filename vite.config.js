@@ -11,10 +11,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
-          antd: ["antd", "@ant-design/v5-patch-for-react-19"],
-          firebase: ["firebase"],
+
           router: ["react-router-dom"],
-          utilities: ["zustand", "nanoid"],
+          utilities: ["zustand"],
         },
       },
     },
