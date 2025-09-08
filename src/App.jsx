@@ -7,8 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useLanguageStore } from "./stores/useLanguageStore";
-import i18n from "./i18n";
-
+import { i18nInstance as i18n } from "./i18n";
 const App = () => {
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const language = useLanguageStore((state) => state.language);

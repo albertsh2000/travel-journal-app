@@ -8,31 +8,41 @@ const languageResources = {
   hy: () => import("./hy.json"),
 };
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: {},
-    fallbackLng: "en",
-    detection: {
-      order: ["localStorage", "navigator"],
-      caches: ["localStorage"],
-    },
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+const setupI18n = async () => {
+  const detectedLng =
+    localStorage.getItem("i18nextLng") ||
+    navigator.language?.split("-")[0] ||
+    "en";
+  const currentLanguage = Object.keys(languageResources).includes(detectedLng)
+    ? detectedLng
+    : "en";
 
-const currentLanguage = i18n.language || "en";
+  const translations = await languageResources[currentLanguage]();
 
-languageResources[currentLanguage]().then((translations) => {
-  i18n.addResourceBundle(
-    currentLanguage,
-    "translation",
-    translations.default || translations
-  );
-  i18n.changeLanguage(currentLanguage);
-});
+  await i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      resources: {
+        [currentLanguage]: {
+          translation: translations.default || translations,
+        },
+      },
+      fallbackLng: "en",
+      detection: {
+        order: ["localStorage", "navigator"],
+        caches: ["localStorage"],
+      },
+      interpolation: {
+        escapeValue: false,
+      },
+      react: {
+        useSuspense: false,
+      },
+    });
+
+  return i18n;
+};
 
 export const changeAppLanguage = async (lng) => {
   if (!i18n.hasResourceBundle(lng, "translation")) {
@@ -46,4 +56,5 @@ export const changeAppLanguage = async (lng) => {
   await i18n.changeLanguage(lng);
 };
 
-export default i18n;
+export const i18nInstance = i18n;
+export default setupI18n;

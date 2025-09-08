@@ -3,7 +3,6 @@ import { Dropdown, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { useLanguageStore } from "../stores/useLanguageStore";
 import { changeAppLanguage } from "../i18n";
-
 const languages = {
   en: "English",
   ru: "Русский",
