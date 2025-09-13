@@ -1,52 +1,55 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Typography, Carousel, Card, Row, Col } from "antd";
 import { useTranslation } from "react-i18next";
 import HeroBanner from "../components/HeroBanner";
 
 const { Title } = Typography;
 
+const images = [
+  "https://plus.unsplash.com/premium_photo-1697730018241-065a9f7568c9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1599946347371-68eb71b16afc?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1486299267070-83823f5448dd?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1558370781-d6196949e317?q=80&w=1479&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+];
+
 const Home = () => {
   const { t } = useTranslation();
 
-  const images = [
-    "https://plus.unsplash.com/premium_photo-1697730018241-065a9f7568c9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1599946347371-68eb71b16afc?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1486299267070-83823f5448dd?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1558370781-d6196949e317?q=80&w=1479&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ];
-
-  const features = [
-    {
-      title: t("features.exploreTitle"),
-      description: t("features.exploreDescription"),
-      img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      title: t("features.shareTitle"),
-      description: t("features.shareDescription"),
-      img: "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      title: t("features.planTitle"),
-      description: t("features.planDescription"),
-      img: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      title: t("features.connectTitle"),
-      description: t("features.connectDescription"),
-      img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      title: t("features.accessTitle"),
-      description: t("features.accessDescription"),
-      img: "https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      title: t("features.travelSmartTitle"),
-      description: t("features.travelSmartDescription"),
-      img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?q=80&w=400&auto=format&fit=crop",
-    },
-  ];
+  const features = useMemo(
+    () => [
+      {
+        title: t("features.exploreTitle"),
+        description: t("features.exploreDescription"),
+        img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&auto=format&fit=crop",
+      },
+      {
+        title: t("features.shareTitle"),
+        description: t("features.shareDescription"),
+        img: "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=400&auto=format&fit=crop",
+      },
+      {
+        title: t("features.planTitle"),
+        description: t("features.planDescription"),
+        img: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=400&auto=format&fit=crop",
+      },
+      {
+        title: t("features.connectTitle"),
+        description: t("features.connectDescription"),
+        img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=400&auto=format&fit=crop",
+      },
+      {
+        title: t("features.accessTitle"),
+        description: t("features.accessDescription"),
+        img: "https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=400&auto=format&fit=crop",
+      },
+      {
+        title: t("features.travelSmartTitle"),
+        description: t("features.travelSmartDescription"),
+        img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?q=80&w=400&auto=format&fit=crop",
+      },
+    ],
+    [t]
+  );
 
   return (
     <div
