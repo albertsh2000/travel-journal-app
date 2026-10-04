@@ -1,18 +1,31 @@
-import React, { useEffect, useState, useCallback } from "react"
-import { List, Button, Modal, Space, Input } from "antd"
-import { Link } from "react-router-dom"
-import TripCard from "../components/TripCard"
-import { DELETE_TRIP_CONFIRM_TITLE } from "../constants"
-import useTripStore from "../stores/useTripStore"
-import { useTranslation } from "react-i18next"
+import { create } from "zustand"
+
+import { db } from "../firebase"
+
+import {
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  deleteDoc,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from "firebase/firestore"
+
+import { COLLECTIONS, ERROR_MESSAGES } from "../constants"
+
+import useAuthStore from "./useAuthStore"
+
 const dummyTrips = [
   {
-    id: nanoid(),
+    id: "dummy-tokyo",
     destination: "Tokyo",
     description: "The bustling capital of Japan.",
   },
   {
-    id: nanoid(),
+    id: "dummy-new-york",
     destination: "New York",
     description: "The city that never sleeps.",
   },
@@ -25,15 +38,70 @@ const useTripStore = create((set, get) => ({
 
   fetchTrips: async () => {
     try {
-      const snapshot = await getDocs(collection(db, COLLECTIONS.TRIPS))
+      const user = useAuthStore.getState().user
+
+      if (!user?.uid) {
+        throw new Error("Not authenticated")
+      }
+
+      const tripsQuery = query(
+        collection(db, COLLECTIONS.TRIPS),
+        where("userId", "==", user.uid),
+      )
+
+      const snapshot = await getDocs(tripsQuery)
+
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }))
 
-      set({ trips: data, hasFetched: true })
+      set({
+        trips: data,
+        hasFetched: true,
+      })
     } catch (error) {
       console.error(ERROR_MESSAGES.FETCH_TRIPS, error)
+    }
+  },
+
+  getTripById: async (id) => {
+    try {
+      // First check local demo trips
+      const demoTrip = get().dummyTrips.find((trip) => trip.id === id)
+
+      if (demoTrip) {
+        return demoTrip
+      }
+
+      const user = useAuthStore.getState().user
+
+      if (!user?.uid) {
+        throw new Error("Not authenticated")
+      }
+
+      // Get the specific Firestore document
+      const tripRef = doc(db, COLLECTIONS.TRIPS, id)
+      const snapshot = await getDoc(tripRef)
+
+      if (!snapshot.exists()) {
+        throw new Error("Trip not found")
+      }
+
+      const trip = {
+        id: snapshot.id,
+        ...snapshot.data(),
+      }
+
+      // Extra client-side ownership check
+      if (trip.userId !== user.uid) {
+        throw new Error("You do not have permission to view this trip")
+      }
+
+      return trip
+    } catch (error) {
+      console.error(ERROR_MESSAGES.FETCH_TRIPS, error)
+      throw error
     }
   },
 

@@ -1,56 +1,71 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import apiService from "../apiService";
-import { ERROR_MESSAGES, MOCK_API_USERS_URL } from "../constants";
+import { create } from "zustand"
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth"
 
-const useAuthStore = create(
-  persist(
-    (set) => ({
-      isAuthenticated: false,
-      isAuthReady: true,
-      user: null,
+import { auth } from "../firebase"
+import { ERROR_MESSAGES } from "../constants"
 
-      login: async (email, password) => {
-        if (!email || !password) {
-          throw new Error(ERROR_MESSAGES.AUTH_REQUIRED_FIELDS);
-        }
-
-        const users = await apiService.get(MOCK_API_USERS_URL);
-
-        const matchedUser = users.find(
-          (user) => user.email === email && user.password === password
-        );
-
-        if (!matchedUser) {
-          throw new Error("Invalid email or password");
-        }
-
-        set({
-          isAuthenticated: true,
-          user: {
-            id: matchedUser.id,
-            email: matchedUser.email,
-          },
-        });
-
-        return matchedUser;
-      },
-
-      logout: async () => {
-        set({
-          isAuthenticated: false,
-          user: null,
-        });
-      },
-    }),
-    {
-      name: "auth-storage",
-      partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-        user: state.user,
-      }),
+const useAuthStore = create((set) => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      set({
+        isAuthenticated: true,
+        user: {
+          uid: user.uid,
+          email: user.email,
+        },
+        isAuthReady: true,
+      })
+    } else {
+      set({
+        isAuthenticated: false,
+        user: null,
+        isAuthReady: true,
+      })
     }
-  )
-);
+  })
 
-export default useAuthStore;
+  return {
+    isAuthenticated: false,
+    isAuthReady: false,
+    user: null,
+
+    login: async (email, password) => {
+      if (!email || !password) {
+        throw new Error(ERROR_MESSAGES.AUTH_REQUIRED_FIELDS)
+      }
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      )
+
+      const user = userCredential.user
+
+      set({
+        isAuthenticated: true,
+        user: {
+          uid: user.uid,
+          email: user.email,
+        },
+      })
+
+      return user
+    },
+
+    logout: async () => {
+      await signOut(auth)
+
+      set({
+        isAuthenticated: false,
+        user: null,
+      })
+    },
+  }
+})
+
+export default useAuthStore
