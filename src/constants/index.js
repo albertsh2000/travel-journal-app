@@ -8,11 +8,13 @@ export const ERROR_MESSAGES = {
   FETCH_TRIPS: "Error fetching trips:",
   ADD_TRIP: "Error adding trip:",
   DELETE_TRIP: "Error deleting trip:",
+  UPDATE_TRIP: "Error updating trip:",
 };
 
 export const SUCCESS_MESSAGES = {
   LOGIN_SUCCESS_MSG: "Logged in successfully",
   TRIP_ADD_SUCCESS_MSG: "Trip added!",
+  TRIP_UPDATE_SUCCESS_MSG: "Trip updated!",
 };
 
 export const DELETE_TRIP_CONFIRM_TITLE = "Delete this trip?";
@@ -25,6 +27,7 @@ export const MENU_KEYS = {
   LOGIN: "/login",
   LOGOUT: "/logout",
   CARD_DETAILS: "/card/:id",
+  EDIT_TRIP: "/card/:id/edit",
 };
 
 export const MOCK_API_USERS_URL =

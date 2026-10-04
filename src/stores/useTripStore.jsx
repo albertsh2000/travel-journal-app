@@ -1,50 +1,101 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import apiService from "../apiService";
-import { MOCK_API_TRIPS_URL } from "../constants";
+import React, { useEffect, useState, useCallback } from "react"
+import { List, Button, Modal, Space, Input } from "antd"
+import { Link } from "react-router-dom"
+import TripCard from "../components/TripCard"
+import { DELETE_TRIP_CONFIRM_TITLE } from "../constants"
+import useTripStore from "../stores/useTripStore"
+import { useTranslation } from "react-i18next"
+const dummyTrips = [
+  {
+    id: nanoid(),
+    destination: "Tokyo",
+    description: "The bustling capital of Japan.",
+  },
+  {
+    id: nanoid(),
+    destination: "New York",
+    description: "The city that never sleeps.",
+  },
+]
 
-const useTripStore = create(
-  persist(
-    (set, get) => ({
-      trips: [],
-      hasFetched: false,
+const useTripStore = create((set, get) => ({
+  trips: [],
+  dummyTrips,
+  hasFetched: false,
 
-      fetchTrips: async () => {
-        const data = await apiService.get(MOCK_API_TRIPS_URL);
-        set({ trips: data, hasFetched: true });
-      },
+  fetchTrips: async () => {
+    try {
+      const snapshot = await getDocs(collection(db, COLLECTIONS.TRIPS))
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
 
-      addTrip: async (trip) => {
-        const newTrip = await apiService.post(MOCK_API_TRIPS_URL, trip);
-        set((state) => ({
-          trips: [newTrip, ...state.trips],
-        }));
-      },
-
-      deleteTrip: async (id) => {
-        await apiService.delete(`${MOCK_API_TRIPS_URL}/${id}`);
-        set((state) => ({
-          trips: state.trips.filter((trip) => trip.id !== id),
-        }));
-      },
-
-      getTripById: async (id) => {
-        const data = await apiService.get(`${MOCK_API_TRIPS_URL}/${id}`);
-        return data;
-      },
-
-      getCombinedTrips: () => {
-        const { trips } = get();
-        return [...trips];
-      },
-    }),
-    {
-      name: "trip-storage",
-      partialize: (state) => ({
-        trips: state.trips,
-      }),
+      set({ trips: data, hasFetched: true })
+    } catch (error) {
+      console.error(ERROR_MESSAGES.FETCH_TRIPS, error)
     }
-  )
-);
+  },
 
-export default useTripStore;
+  addTrip: async (trip) => {
+    try {
+      const user = useAuthStore.getState().user
+
+      if (!user?.uid) {
+        throw new Error("Not authenticated")
+      }
+
+      const tripWithOwner = {
+        ...trip,
+        userId: user.uid,
+      }
+
+      const docRef = await addDoc(
+        collection(db, COLLECTIONS.TRIPS),
+        tripWithOwner,
+      )
+
+      set((state) => ({
+        trips: [{ id: docRef.id, ...tripWithOwner }, ...state.trips],
+      }))
+    } catch (error) {
+      console.error(ERROR_MESSAGES.ADD_TRIP, error)
+      throw error
+    }
+  },
+
+  deleteTrip: async (id) => {
+    try {
+      await deleteDoc(doc(db, COLLECTIONS.TRIPS, id))
+
+      set((state) => ({
+        trips: state.trips.filter((trip) => trip.id !== id),
+      }))
+    } catch (error) {
+      console.error(ERROR_MESSAGES.DELETE_TRIP, error)
+    }
+  },
+
+  updateTrip: async (id, updatedData) => {
+    try {
+      await updateDoc(doc(db, COLLECTIONS.TRIPS, id), updatedData)
+
+      set((state) => ({
+        trips: state.trips.map((trip) =>
+          trip.id === id ? { ...trip, ...updatedData } : trip,
+        ),
+      }))
+    } catch (error) {
+      console.error(ERROR_MESSAGES.UPDATE_TRIP, error)
+      throw error
+    }
+  },
+
+  getCombinedTrips: () => {
+    const { trips, dummyTrips } = get()
+
+    return [...trips, ...dummyTrips]
+  },
+}))
+
+export default useTripStore

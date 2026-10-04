@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /trips/{tripId} {
+      // Allow read if user is authenticated AND (trip is owned by them OR trip is a demo trip)
+      allow read: if request.auth.uid != null && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.isDemo == true
+      );
+
+      // Allow create if user is authenticated AND they set themselves as the owner
+      allow create: if request.auth.uid != null &&
+                       request.resource.data.userId == request.auth.uid;
+
+      // Allow update/delete ONLY if user is authenticated AND they own the trip
+      allow update, delete: if request.auth.uid != null &&
+                               resource.data.userId == request.auth.uid;
+    }
+  }
+}

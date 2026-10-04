@@ -1,17 +1,18 @@
-import React, { lazy } from "react";
-import withSuspense from "../helpers/withSuspense";
-import MainLayout from "../components/MainLayout";
-import ProtectedRoute from "../components/ProtectedRoute";
-import { MENU_KEYS } from "../constants";
-import { createBrowserRouter } from "react-router-dom";
+import React, { lazy } from "react"
+import withSuspense from "../helpers/withSuspense"
+import MainLayout from "../components/MainLayout"
+import ProtectedRoute from "../components/ProtectedRoute"
+import { MENU_KEYS } from "../constants"
+import { createBrowserRouter } from "react-router-dom"
 
-const Home = lazy(() => import("../pages/Home"));
-const Explore = lazy(() => import("../pages/Explore"));
-const Login = lazy(() => import("../pages/Login"));
-const MyJournal = lazy(() => import("../pages/MyJournal"));
-const AddTrip = lazy(() => import("../pages/AddTrip"));
-const TripCardDetails = lazy(() => import("../pages/TripCardDetails"));
-const NotFound = lazy(() => import("../pages/NotFound"));
+const Home = lazy(() => import("../pages/Home"))
+const Explore = lazy(() => import("../pages/Explore"))
+const Login = lazy(() => import("../pages/Login"))
+const MyJournal = lazy(() => import("../pages/MyJournal"))
+const AddTrip = lazy(() => import("../pages/AddTrip"))
+const TripCardDetails = lazy(() => import("../pages/TripCardDetails"))
+const NotFound = lazy(() => import("../pages/NotFound"))
+const EditTrip = lazy(() => import("../pages/EditTrip"))
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
             <ProtectedRoute>
               <MyJournal />
             </ProtectedRoute>
-          ))
+          )),
         ),
       },
       {
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
             <ProtectedRoute>
               <AddTrip />
             </ProtectedRoute>
-          ))
+          )),
         ),
       },
       {
@@ -57,15 +58,21 @@ const router = createBrowserRouter([
             <ProtectedRoute>
               <TripCardDetails />
             </ProtectedRoute>
-          ))
+          )),
         ),
       },
       {
-        path: "*",
-        element: React.createElement(withSuspense(NotFound)),
+        path: MENU_KEYS.EDIT_TRIP,
+        element: React.createElement(
+          withSuspense(() => (
+            <ProtectedRoute>
+              <EditTrip />
+            </ProtectedRoute>
+          )),
+        ),
       },
     ],
   },
-]);
+])
 
-export default router;
+export default router
