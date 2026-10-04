@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## Development Commands
 
-Run these commands from the repository root:
+Run from the repository root:
 
 ```bash
 npm run dev
@@ -13,65 +13,72 @@ npm run lint
 npm run preview
 ```
 
-Before considering a change complete, run the relevant validation commands rather than assuming the change works.
+Before considering a change complete, run the relevant validation command(s). Do not assume a command works without verifying it.
 
 ## Engineering Conventions
 
-### 1. Keep Firebase access centralized
+### 1. Keep authentication centralized
 
-Keep Firestore and authentication operations inside the existing Zustand stores instead of adding Firebase calls directly to page or UI components.
+Use the existing authentication store and route protection mechanisms for authentication state and access control. Do not introduce a second authentication source of truth.
 
-**Reason:** This keeps Firebase-specific logic centralized and prevents components from becoming tightly coupled to the database/authentication layer.
+**Reason:** Authentication state is restored asynchronously, so centralizing it prevents inconsistent auth state and protected-route behavior.
 
-### 2. Use the existing authentication state
+### 2. Keep Firebase access behind the existing data layer
 
-Use `useAuthStore` for authentication state and user information instead of creating another authentication context or store.
+Firestore operations belong in the existing Zustand stores. Components should call store methods rather than accessing Firebase directly.
 
-**Reason:** Authentication readiness is coordinated through the existing `isAuthReady` flow, which prevents the application from rendering before Firebase has restored the user's session.
+**Reason:** The stores provide a consistent boundary between UI code and persistence logic, making data behavior easier to maintain and change.
 
-### 3. Keep trip data logic in `useTripStore`
+### 3. Preserve ownership enforcement
 
-Use `useTripStore` for trip CRUD operations and trip-related Firestore access rather than implementing separate trip queries inside components.
+User-owned trip data must remain associated with the authenticated user's Firebase `uid`. Queries should scope user data to that owner, while Firestore Security Rules remain the actual security boundary.
 
-**Reason:** Trip data access should remain centralized so different pages do not implement inconsistent Firestore behavior.
+Client-side ownership checks may provide defense-in-depth, but must never replace Firestore Security Rules.
 
-### 4. Prefer existing UI patterns
+**Reason:** Filtering data in the UI is not a security mechanism; authorization must be enforced by the database.
 
-Reuse existing Ant Design components and established component patterns before creating custom UI primitives.
+### 4. Reuse existing UI and application patterns
 
-**Reason:** The application uses Ant Design as its primary UI system, so reusing it keeps interactions, forms, validation, and visual behavior consistent.
+Prefer the project's existing UI components, forms, routing patterns, stores, and helpers before introducing new abstractions or dependencies.
 
-### 5. Preserve the existing routing structure
+For user-facing text, follow the existing internationalization pattern rather than adding hard-coded strings where translations are expected.
 
-When adding or changing pages, follow the existing route and protection patterns. Use the existing lazy-loading and `ProtectedRoute` mechanisms where appropriate.
+**Reason:** Reusing established patterns keeps behavior and UX consistent and avoids unnecessary abstractions.
 
-**Reason:** The application relies on route-level code splitting and centralized authentication protection, so bypassing these patterns can introduce inconsistent navigation or unnecessary bundle loading.
+### 5. Keep changes focused
 
-### 6. Keep Explore demo data separate from user data
+Implement the requested behavior with the smallest reasonable change. Avoid unrelated refactoring, dependency changes, or architectural rewrites unless they are necessary for correctness.
 
-Treat the dummy trips used by the Explore experience as demonstration data, not as the source of truth for user-created trips.
-
-**Reason:** User-created trips are persisted in Firestore, while the Explore data exists to provide public/example content.
+**Reason:** Smaller changes are easier to review, validate, and troubleshoot.
 
 ## Negative Space
 
-### Do not copy `src/firebase.js` as a feature template
+### Do not use `src/firebase.js` as a feature template
 
-`src/firebase.js` is the Firebase initialization boundary. Do not put feature-level Firestore queries, authentication flows, or page-specific logic there.
+`src/firebase.js` is the Firebase initialization boundary. Do not add feature-specific Firestore queries, mutations, or application logic there.
 
-Feature-level Firebase operations belong in the appropriate existing store.
+**Reason:** Firebase initialization and application data access have different responsibilities.
 
-### Do not copy Explore dummy data into production features
+### Do not add Firebase calls to components
 
-The dummy trip data used for exploration/demo purposes is not a replacement for persisted user data. Do not use it as the model for implementing real trip CRUD.
+Components must not directly perform Firestore operations. Extend the appropriate existing store instead.
 
-## Working Principles
+**Reason:** Direct database access from components bypasses the application's established data-access boundary.
 
-- Prefer extending an existing pattern over introducing a new abstraction when the existing pattern already solves the problem.
-- Before adding a new store, shared component, utility, or dependency, check whether an existing project pattern can be reused.
-- Keep changes focused on the requested task and avoid unrelated refactoring unless it is necessary for correctness.
-- Do not change authentication, routing, or Firebase initialization behavior without considering the existing application-wide flow.
+### Do not treat demo data as user data
+
+Demo/dummy trips must remain separate from persisted user-owned trips. Do not use demo data as a fallback or substitute for Firestore data.
+
+**Reason:** Demo content and authenticated user data have different ownership and persistence semantics.
+
+### Do not create a new store automatically
+
+Before creating a new Zustand store, check whether the existing stores can reasonably own the required state or behavior.
+
+**Reason:** Unnecessary stores fragment application state and make data flow harder to understand.
 
 ## Verification
 
-The commands in this file must be verified against the current repository before being relied upon. If a command fails because the repository has changed, update this file rather than assuming the old command is still correct.
+Do not claim a change is complete based only on static inspection. Run the relevant available validation commands and verify the affected behavior.
+
+If a documented command no longer works, investigate the repository and update this file rather than inventing a workaround.
